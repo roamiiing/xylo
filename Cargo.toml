@@ -1,0 +1,10 @@
+[package]
+name = "xylo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.0.2", features = ["derive"] }
+path-absolutize = "3.0.13"
+serde = { version = "1.0.145", features = ["derive"] }
+serde_yaml = "0.9.13"
