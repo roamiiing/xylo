@@ -1,4 +1,4 @@
-mod sources {
+pub mod sources {
     pub mod base;
     pub mod pgsql;
 }

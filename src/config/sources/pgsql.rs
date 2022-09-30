@@ -1,9 +1,9 @@
 use serde::Deserialize;
 
-#[derive(Debug, PartialEq, Deserialize)]
+#[derive(Debug, PartialEq, Deserialize, Clone)]
 pub struct PgsqlSourceConfig {
-    host: Option<String>,
-    port: Option<String>,
-    username: String,
-    password: String,
+    pub host: String,
+    pub port: String,
+    pub username: String,
+    pub password: Option<String>,
 }

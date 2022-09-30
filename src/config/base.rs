@@ -22,19 +22,19 @@ pub enum ServiceDestinationConfig {
 
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct ServiceConfig {
-    source: SourceConfig,
-    destination: ServiceDestinationConfig,
+    pub source: SourceConfig,
+    pub destination: ServiceDestinationConfig,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct XyloConfig {
-    services: HashMap<String, ServiceConfig>,
-    destinations: HashMap<String, DestinationConfig>,
+    pub services: HashMap<String, ServiceConfig>,
+    pub destinations: Option<HashMap<String, DestinationConfig>>,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct RootConfig {
-    xylo: XyloConfig,
+    pub xylo: XyloConfig,
 }
 
 pub fn parse_config(contents: String) -> Result<RootConfig, io::Error> {
