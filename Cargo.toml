@@ -11,3 +11,8 @@ nanoid = "0.4.0"
 path-absolutize = "3.0.13"
 serde = { version = "1.0.145", features = ["derive"] }
 serde_yaml = "0.9.13"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
