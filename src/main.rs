@@ -3,9 +3,11 @@ mod config;
 mod core;
 mod utils;
 
+use crate::core::archive::create_archive;
 use crate::core::pull::base::PullStrategy;
 use crate::core::pull::pgsql::PgsqlPullStrategy;
 use clap::Parser;
+use colored::Colorize;
 use config::sources::base::SourceConfig::Pgsql;
 use path_absolutize::*;
 use std::fs;
@@ -33,10 +35,19 @@ fn main() {
                     Pgsql(config) => PgsqlPullStrategy::new(&key, &config),
                 };
 
-                let result = strategy.pull();
+                let result = strategy.pull().and_then(|meta| {
+                    log::info(&key, "Dumped successfully. Creating archive");
+                    create_archive(&meta)
+                });
 
                 match result {
-                    Ok(_) => log::success(key, "Successfully dumped"),
+                    Ok(meta) => log::success(
+                        key,
+                        format!(
+                            "Successfully archived: {}",
+                            meta.get_archive_path().to_string_lossy().bright_green()
+                        ),
+                    ),
                     Err(err) => {
                         log::error(&key, format!("Error happened during dump creation:\n{err}"))
                     }

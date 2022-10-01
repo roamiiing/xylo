@@ -56,7 +56,7 @@ impl PgsqlPullStrategy {
 
 impl PullStrategy<PgsqlSourceConfig> for PgsqlPullStrategy {
     fn pull(&self) -> Result<DumpMetadata, io::Error> {
-        let tmp_path = self.meta.get_path();
+        let tmp_path = self.meta.get_dir_path();
 
         create_dir_all(tmp_path.deref())
             .and_then(|_| File::create(tmp_path.join("pgsql.dump.sql")))

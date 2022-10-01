@@ -22,8 +22,14 @@ impl DumpMetadata {
         }
     }
 
-    pub fn get_path(&self) -> PathBuf {
+    pub fn get_dir_path(&self) -> PathBuf {
         Path::new(TMP_DIR).join(self.to_string())
+    }
+
+    pub fn get_archive_path(&self) -> PathBuf {
+        let mut path = self.get_dir_path();
+        path.set_extension("zip");
+        path
     }
 }
 
