@@ -16,17 +16,21 @@ pub struct PgsqlPullStrategy {
 }
 
 impl PgsqlPullStrategy {
-    pub fn new(service: String, config: PgsqlSourceConfig) -> PgsqlPullStrategy {
+    pub fn new<S: Into<String>>(service: S, config: &PgsqlSourceConfig) -> PgsqlPullStrategy {
         PgsqlPullStrategy {
-            meta: DumpMetadata::new(service),
-            config,
+            meta: DumpMetadata::new(service.into()),
+            config: config.clone(),
         }
     }
 
     fn dump(&self, file: File) -> Result<(), io::Error> {
         let command_str = format!(
             "PGPASSWORD={} pg_dumpall -h {} -p {} -U {}",
-            self.config.password.as_ref().unwrap_or(&"".to_owned()),
+            self.config
+                .password
+                .as_ref()
+                .map(String::as_str)
+                .unwrap_or(""),
             self.config.host,
             self.config.port,
             self.config.username,
@@ -51,7 +55,7 @@ impl PgsqlPullStrategy {
 }
 
 impl PullStrategy<PgsqlSourceConfig> for PgsqlPullStrategy {
-    fn pull(&self) -> Result<&DumpMetadata, io::Error> {
+    fn pull(&self) -> Result<DumpMetadata, io::Error> {
         let tmp_path = self.meta.get_path();
 
         create_dir_all(tmp_path.deref())
@@ -60,7 +64,7 @@ impl PullStrategy<PgsqlSourceConfig> for PgsqlPullStrategy {
                 let dump = self.dump(file);
 
                 match dump {
-                    Ok(_) => Ok(&self.meta),
+                    Ok(_) => Ok(self.meta.clone()),
                     Err(err) => {
                         remove_dir_all(tmp_path.deref()).unwrap();
                         Err(err)

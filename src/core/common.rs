@@ -6,6 +6,7 @@ use crate::utils::hash;
 
 const TMP_DIR: &str = "/tmp/.xylo/";
 
+#[derive(Clone)]
 pub struct DumpMetadata {
     service: String,
     hash: String,
