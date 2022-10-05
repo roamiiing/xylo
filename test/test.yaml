@@ -1,4 +1,6 @@
 xylo:
+  destinations:
+
   services:
     cheeseplate:
       source:
@@ -9,72 +11,6 @@ xylo:
           host: localhost
           port: 5432
       destination:
-        - type: gdrive
+        - type: local
           config:
-            token: ...
-            path: ...
-    poke:
-      source:
-        type: pgsql
-        config:
-          username: labuser
-          password: supersecure
-          host: localhost
-          port: 5432
-      destination:
-        - type: gdrive
-          config:
-            token: ...
-            path: ...
-    amogus:
-      source:
-        type: pgsql
-        config:
-          username: labuser
-          password: supersecure
-          host: localhost
-          port: 5432
-      destination:
-        - type: gdrive
-          config:
-            token: ...
-            path: ...
-    cheeseplate2:
-      source:
-        type: pgsql
-        config:
-          username: labuser
-          password: supersecure
-          host: localhost
-          port: 5432
-      destination:
-        - type: gdrive
-          config:
-            token: ...
-            path: ...
-    poke2:
-      source:
-        type: pgsql
-        config:
-          username: labuser
-          password: supersecure
-          host: localhost
-          port: 5432
-      destination:
-        - type: gdrive
-          config:
-            token: ...
-            path: ...
-    amogus2:
-      source:
-        type: pgsql
-        config:
-          username: labuser
-          password: supersecure
-          host: localhost
-          port: 5432
-      destination:
-        - type: gdrive
-          config:
-            token: ...
-            path: ...
+            path: /Users/roam/xylodumps/

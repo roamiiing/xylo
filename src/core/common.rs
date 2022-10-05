@@ -1,4 +1,7 @@
-use std::path::{Path, PathBuf};
+use std::{
+    fs, io,
+    path::{Path, PathBuf},
+};
 
 use chrono::{DateTime, Utc};
 
@@ -31,6 +34,10 @@ impl DumpMetadata {
         path.set_extension("zip");
         path
     }
+
+    pub fn get_service(&self) -> String {
+        self.service.clone()
+    }
 }
 
 impl ToString for DumpMetadata {
@@ -42,4 +49,14 @@ impl ToString for DumpMetadata {
             self.hash
         )
     }
+}
+
+pub fn cleanup(meta: &DumpMetadata) -> Result<(), io::Error> {
+    let dir_path = meta.get_dir_path();
+    let archive_path = meta.get_archive_path();
+
+    fs::remove_dir_all(dir_path)?;
+    fs::remove_file(archive_path)?;
+
+    Ok(())
 }

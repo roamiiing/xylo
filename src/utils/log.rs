@@ -9,7 +9,7 @@ fn base_log(label: ColoredString, msg: String) {
 }
 
 pub fn info<L: Into<String>, M: Into<String>>(label: L, msg: M) {
-    let colored_label = format!("{}", label.into()).bold().bright_cyan();
+    let colored_label = format!("{}", label.into()).bold().blue();
     base_log(colored_label, msg.into());
 }
 

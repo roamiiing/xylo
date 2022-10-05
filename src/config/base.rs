@@ -6,11 +6,24 @@ use serde::Deserialize;
 use super::destinations::base::DestinationConfig;
 use super::sources::base::SourceConfig;
 
-#[derive(Debug, PartialEq, Deserialize)]
+type DestinationsMap = HashMap<String, DestinationConfig>;
+
+#[derive(Debug, PartialEq, Deserialize, Clone)]
 #[serde(untagged)]
 pub enum ServiceDestinationOption {
     ConfigObject(DestinationConfig),
     AliasString(String),
+}
+
+impl ServiceDestinationOption {
+    pub fn unpack_from(&self, destinations_map: &DestinationsMap) -> Option<DestinationConfig> {
+        match self {
+            ServiceDestinationOption::ConfigObject(obj) => Some(obj.clone()),
+            ServiceDestinationOption::AliasString(str) => {
+                destinations_map.get(str).map(|cfg| cfg.clone())
+            }
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
@@ -18,6 +31,19 @@ pub enum ServiceDestinationOption {
 pub enum ServiceDestinationConfig {
     Single(ServiceDestinationOption),
     Many(Vec<ServiceDestinationOption>),
+}
+
+impl ServiceDestinationConfig {
+    pub fn get_configs_from(&self, destinations_map: &DestinationsMap) -> Vec<DestinationConfig> {
+        match self {
+            ServiceDestinationConfig::Many(vector) => vector.clone(),
+            ServiceDestinationConfig::Single(config) => vec![config.clone()],
+        }
+        .into_iter()
+        .map(|option| option.unpack_from(destinations_map))
+        .flatten()
+        .collect()
+    }
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
@@ -29,7 +55,7 @@ pub struct ServiceConfig {
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct XyloConfig {
     pub services: HashMap<String, ServiceConfig>,
-    pub destinations: Option<HashMap<String, DestinationConfig>>,
+    pub destinations: Option<DestinationsMap>,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]

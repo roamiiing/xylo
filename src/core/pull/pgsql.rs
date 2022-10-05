@@ -37,39 +37,37 @@ impl PgsqlPullStrategy {
         );
         let mut command = create_command(command_str);
 
-        command
+        let status = command
             .stdout(file)
             .spawn()
-            .and_then(|mut process| process.wait())
-            .and_then(|status| {
-                if status.success() {
-                    Ok(())
-                } else {
-                    Err(Error::new(
-                        io::ErrorKind::Other,
-                        "Unhandled exception during pgdump",
-                    ))
-                }
-            })
+            .and_then(|mut process| process.wait())?;
+
+        if status.success() {
+            Ok(())
+        } else {
+            Err(Error::new(
+                io::ErrorKind::Other,
+                "Unhandled exception during pgdump",
+            ))
+        }
     }
 }
 
-impl PullStrategy<PgsqlSourceConfig> for PgsqlPullStrategy {
+impl PullStrategy for PgsqlPullStrategy {
     fn pull(&self) -> Result<DumpMetadata, io::Error> {
         let tmp_path = self.meta.get_dir_path();
 
-        create_dir_all(tmp_path.deref())
-            .and_then(|_| File::create(tmp_path.join("pgsql.dump.sql")))
-            .and_then(|file| {
-                let dump = self.dump(file);
+        create_dir_all(tmp_path.deref())?;
+        let file = File::create(tmp_path.join("pgsql.dump.sql"))?;
 
-                match dump {
-                    Ok(_) => Ok(self.meta.clone()),
-                    Err(err) => {
-                        remove_dir_all(tmp_path.deref()).unwrap();
-                        Err(err)
-                    }
-                }
-            })
+        let dump = self.dump(file);
+
+        match dump {
+            Ok(_) => Ok(self.meta.clone()),
+            Err(err) => {
+                remove_dir_all(tmp_path.deref()).unwrap();
+                Err(err)
+            }
+        }
     }
 }

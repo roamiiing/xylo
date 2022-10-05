@@ -3,7 +3,7 @@ pub mod sources {
     pub mod pgsql;
 }
 
-mod destinations {
+pub mod destinations {
     pub mod base;
     pub mod gdrive;
     pub mod local;
