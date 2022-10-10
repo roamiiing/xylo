@@ -8,10 +8,11 @@ use colored::Colorize;
 use config::base::ServiceConfig;
 use config::destinations::base::DestinationConfig;
 use path_absolutize::*;
-use std::{collections::HashMap, fs, io, path::Path};
+use std::{collections::HashMap, env, fs, io, path::Path};
 
 use crate::core::archive::create_archive;
 use crate::core::common::cleanup;
+use crate::core::env::parse_env_file;
 use crate::core::pull::{base::PullStrategy, create_pull_strategy};
 use crate::core::push::{base::PushStrategy, create_push_strategy};
 use crate::utils::log;
@@ -70,6 +71,24 @@ fn main() -> Result<(), io::Error> {
         .xylo
         .destinations
         .unwrap_or_else(|| HashMap::new());
+
+    root_config
+        .xylo
+        .env_file
+        .and_then(|env_path_str| {
+            let joined = path
+                .clone()
+                .join(Path::new(&format!("../{}", &env_path_str)));
+            let absolute = joined.absolutize().ok()?;
+
+            Some(absolute.to_path_buf())
+        })
+        .and_then(parse_env_file)
+        .map(|map| {
+            for (key, value) in map {
+                env::set_var(key, value)
+            }
+        });
 
     for (key, config) in services {
         let log_error = |error: io::Error| log::error(&key, error.to_string());

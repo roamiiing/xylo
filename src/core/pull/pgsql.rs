@@ -1,6 +1,6 @@
 use std::{
     fs::{create_dir_all, remove_dir_all, File},
-    io::{self, Error},
+    io,
     ops::Deref,
 };
 
@@ -24,17 +24,18 @@ impl PgsqlPullStrategy {
     }
 
     fn dump(&self, file: File) -> Result<(), io::Error> {
+        let unpacked_config = self.config.unpack().ok_or_else(|| {
+            io::Error::new(io::ErrorKind::InvalidInput, "Not enough data provided")
+        })?;
+
         let command_str = format!(
             "PGPASSWORD={} pg_dumpall -h {} -p {} -U {}",
-            self.config
-                .password
-                .as_ref()
-                .map(String::as_str)
-                .unwrap_or(""),
-            self.config.host,
-            self.config.port,
-            self.config.username,
+            unpacked_config.password,
+            unpacked_config.host,
+            unpacked_config.port,
+            unpacked_config.username,
         );
+
         let mut command = create_command(command_str);
 
         let status = command
@@ -45,7 +46,7 @@ impl PgsqlPullStrategy {
         if status.success() {
             Ok(())
         } else {
-            Err(Error::new(
+            Err(io::Error::new(
                 io::ErrorKind::Other,
                 "Unhandled exception during pgdump",
             ))

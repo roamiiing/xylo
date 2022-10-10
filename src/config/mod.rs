@@ -5,10 +5,11 @@ pub mod sources {
 
 pub mod destinations {
     pub mod base;
-    pub mod gdrive;
     pub mod local;
 }
 
 pub mod base;
+
+pub mod common;
 
 pub use base::parse_config;

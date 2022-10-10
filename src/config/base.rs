@@ -56,6 +56,7 @@ pub struct ServiceConfig {
 pub struct XyloConfig {
     pub services: HashMap<String, ServiceConfig>,
     pub destinations: Option<DestinationsMap>,
+    pub env_file: Option<String>,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
