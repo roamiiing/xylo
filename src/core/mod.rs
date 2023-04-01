@@ -10,6 +10,7 @@ pub mod push {
     pub mod base;
     pub mod create;
     pub mod local;
+    pub mod s3;
 
     pub use create::create_push_strategy;
 }
