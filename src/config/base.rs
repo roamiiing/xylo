@@ -64,7 +64,7 @@ pub struct RootConfig {
     pub xylo: XyloConfig,
 }
 
-pub fn parse_config(contents: String) -> Result<RootConfig, io::Error> {
-    serde_yaml::from_str::<RootConfig>(&contents)
+pub fn parse_config(contents: &str) -> Result<RootConfig, io::Error> {
+    serde_yaml::from_str::<RootConfig>(contents)
         .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))
 }

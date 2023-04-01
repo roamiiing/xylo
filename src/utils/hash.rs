@@ -7,3 +7,14 @@ const ALPHABET: [char; 16] = [
 pub fn hash() -> String {
     nanoid!(10, &ALPHABET)
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_hash() {
+        let hash = hash();
+        assert_eq!(hash.len(), 10);
+    }
+}

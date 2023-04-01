@@ -60,3 +60,27 @@ pub fn cleanup(meta: &DumpMetadata) -> Result<(), io::Error> {
 
     Ok(())
 }
+
+// test cleanup fn
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_cleanup() {
+        let meta = DumpMetadata::new("test".to_string());
+        let dir_path = meta.get_dir_path();
+        let archive_path = meta.get_archive_path();
+
+        fs::create_dir_all(dir_path.clone()).unwrap();
+        fs::File::create(archive_path.clone()).unwrap();
+
+        assert!(dir_path.exists());
+        assert!(archive_path.exists());
+
+        cleanup(&meta).unwrap();
+
+        assert!(!dir_path.exists());
+        assert!(!archive_path.exists());
+    }
+}

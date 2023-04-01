@@ -64,7 +64,7 @@ fn main() -> Result<(), io::Error> {
     let root_config = path
         .absolutize()
         .and_then(fs::read_to_string)
-        .and_then(config::parse_config)?;
+        .and_then(|s| config::parse_config(s.as_str()))?;
 
     let services = root_config.xylo.services;
     let destinations = root_config

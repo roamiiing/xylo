@@ -74,4 +74,21 @@ mod test {
         assert_eq!(parsed_env, expected_parsed_env);
         assert_eq!(parsed_value, expected_parsed_value);
     }
+
+    #[test]
+    fn test_maybe_env_deserializer() {
+        let env_string = "$env(ABOBUS)";
+        let value_string = "some-value";
+
+        let deserialized_env: MaybeEnv =
+            serde_json::from_str(&format!("\"{}\"", env_string)).unwrap();
+        let deserialized_value: MaybeEnv =
+            serde_json::from_str(&format!("\"{}\"", value_string)).unwrap();
+
+        let expected_deserialized_env = MaybeEnv::Env("ABOBUS".to_owned());
+        let expected_deserialized_value = MaybeEnv::Value("some-value".to_owned());
+
+        assert_eq!(deserialized_env, expected_deserialized_env);
+        assert_eq!(deserialized_value, expected_deserialized_value);
+    }
 }
