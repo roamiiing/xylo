@@ -11,6 +11,7 @@ pub mod push {
     pub mod create;
     pub mod local;
     pub mod s3;
+    pub mod scp;
 
     pub use create::create_push_strategy;
 }
