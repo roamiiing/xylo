@@ -61,7 +61,6 @@ pub fn cleanup(meta: &DumpMetadata) -> Result<(), io::Error> {
     Ok(())
 }
 
-// test cleanup fn
 #[cfg(test)]
 mod tests {
     use super::*;

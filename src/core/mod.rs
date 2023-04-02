@@ -1,6 +1,7 @@
 pub mod pull {
     pub mod base;
     pub mod create;
+    pub mod local;
     pub mod pgsql;
 
     pub use create::create_pull_strategy;

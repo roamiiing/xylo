@@ -49,7 +49,7 @@ fn process_config(
     }
 
     log::info(&key, "Cleaning up");
-    cleanup(&meta)?;
+    cleanup(&meta).map_err(log_error).ok();
 
     log::success(&key, "Successfully dumped (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧");
 
