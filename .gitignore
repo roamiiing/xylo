@@ -12,3 +12,6 @@ target/
 .DS_Store
 
 xylo.yml
+
+etcxylo/
+.env

@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  xylo:
+    build: .
+    volumes:
+      - ./etcxylo/:/etc/xylo/
+    env_file:
+      - .env
